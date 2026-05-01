@@ -5,7 +5,7 @@ import { TransactionStatus } from "genlayer-js/types";
 // @ts-ignore
 BigInt.prototype.toJSON = function () { return this.toString(); };
 
-export const CONTRACT_ADDRESS = "0x90686cb029FEb48aCa3CBB0b4f87f284F13238F3" as const;
+export const CONTRACT_ADDRESS = "0x03C66655BE7721EA2793360FF9d9De1BF1342ca7" as const;
 export const CHAIN_ID_HEX = "0x107D";
 export const CHAIN_ID_DEC = 4221;
 export const READ_PRICE_WEI = BigInt("50000000000000000"); // 0.05 GEN
