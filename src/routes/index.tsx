@@ -254,16 +254,19 @@ function GenOracle() {
                 <button
                   onClick={handleConnect}
                   disabled={!sign}
-                  className="group relative overflow-hidden rounded-full px-10 py-5 text-sm uppercase tracking-[0.3em] font-medium transition-all disabled:cursor-not-allowed disabled:opacity-30"
+                  className="group relative overflow-hidden rounded-full border px-10 py-5 text-sm uppercase tracking-[0.3em] font-medium transition-all disabled:cursor-not-allowed"
                   style={{
                     background: sign
                       ? `linear-gradient(135deg, ${sign.color}, oklch(0.85 0.16 85))`
-                      : "oklch(0.2 0.04 280)",
-                    color: "oklch(0.1 0.04 280)",
-                    boxShadow: sign ? `0 10px 50px var(--sign-glow)` : "none",
+                      : "oklch(0.18 0.05 280 / 0.8)",
+                    color: sign ? "oklch(0.1 0.04 280)" : "oklch(0.95 0.02 85)",
+                    borderColor: sign ? "transparent" : "oklch(0.85 0.16 85 / 0.6)",
+                    boxShadow: sign
+                      ? `0 10px 50px var(--sign-glow)`
+                      : "0 0 24px oklch(0.85 0.16 85 / 0.25)",
                   }}
                 >
-                  {sign ? "Connect Wallet ✦" : "Choose a sign first"}
+                  {sign ? "Connect Wallet ✦" : "↑ Choose a sign first"}
                 </button>
               ) : needsFaucet ? (
                 <FaucetPrompt onRecheck={recheckBalance} balance={balance} />
