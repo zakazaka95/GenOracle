@@ -5,7 +5,7 @@ import {
   CHAIN_ID_HEX,
   READ_PRICE_WEI,
   connectWallet,
-  ensureBradbury,
+  ensureStudio,
   getBalance,
   getCurrentChainId,
   readHoroscope,
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Premium onchain horoscope readings sealed by GenLayer's AI validator network on the Bradbury Testnet. Your destiny, validated by consensus.",
+          "Premium onchain horoscope readings sealed by GenLayer's AI validator network on GenLayer Studio. Your destiny, validated by consensus.",
       },
       { property: "og:title", content: "GenOracle — Onchain Horoscopes" },
       {
@@ -110,7 +110,7 @@ function GenOracle() {
     try {
       const addr = await connectWallet();
       setAddress(addr);
-      await ensureBradbury();
+      await ensureStudio();
       const cid = await getCurrentChainId();
       setChainId(cid);
       const b = await getBalance(addr);
@@ -190,7 +190,7 @@ function GenOracle() {
         <div className="flex items-center gap-3">
           {onWrongChain && (
             <button
-              onClick={ensureBradbury}
+              onClick={ensureStudio}
               className="rounded-full border border-destructive/50 bg-destructive/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] text-destructive hover:bg-destructive/20"
             >
               ⚠ Wrong Network · Switch
@@ -281,7 +281,7 @@ function GenOracle() {
                   }}
                 >
                   {onWrongChain
-                    ? "Switch to Bradbury to read"
+                    ? "Switch to GenLayer Studio to read"
                     : sign
                     ? "Read My Stars · 0.05 GEN"
                     : "Choose a sign"}
@@ -307,7 +307,7 @@ function GenOracle() {
         {state !== "revealed" && (
           <footer className="mt-24 border-t border-white/5 pt-8 text-center">
             <div className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/30">
-              contract 0x9068…38F3 · chain 4221 · genlayer bradbury testnet
+              contract 0xC0B4…9306 · chain 61999 · genlayer studio
             </div>
             <div className="mt-3">
               <a

@@ -1,13 +1,13 @@
 import { createClient } from "genlayer-js";
-import { testnetBradbury } from "genlayer-js/chains";
+import { studionet } from "genlayer-js/chains";
 import { TransactionStatus } from "genlayer-js/types";
 
 // @ts-ignore
 BigInt.prototype.toJSON = function () { return this.toString(); };
 
-export const CONTRACT_ADDRESS = "0x03C66655BE7721EA2793360FF9d9De1BF1342ca7" as const;
-export const CHAIN_ID_HEX = "0x107D";
-export const CHAIN_ID_DEC = 4221;
+export const CONTRACT_ADDRESS = "0xC0B4526E0a674151C7393fD6c35AEDA3F5c29306" as const;
+export const CHAIN_ID_HEX = "0xF22F";
+export const CHAIN_ID_DEC = 61999;
 export const READ_PRICE_WEI = BigInt("50000000000000000"); // 0.05 GEN
 
 export type HoroscopeResult = {
@@ -37,7 +37,7 @@ export async function connectWallet(): Promise<string> {
   return accounts[0];
 }
 
-export async function ensureBradbury(): Promise<void> {
+export async function ensureStudio(): Promise<void> {
   try {
     await eth().request({
       method: "wallet_switchEthereumChain",
@@ -49,10 +49,10 @@ export async function ensureBradbury(): Promise<void> {
         method: "wallet_addEthereumChain",
         params: [{
           chainId: CHAIN_ID_HEX,
-          chainName: "GenLayer Bradbury Testnet",
+          chainName: "GenLayer Studio",
           nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
-          rpcUrls: ["https://rpc.testnet-chain.genlayer.com"],
-          blockExplorerUrls: ["https://explorer-bradbury.genlayer.com"],
+          rpcUrls: ["https://studio.genlayer.com/api"],
+          blockExplorerUrls: ["https://explorer-studio.genlayer.com"],
         }],
       });
     } else {
@@ -85,7 +85,7 @@ const parseReadable = (readable: string) => {
 
 export async function readHoroscope(address: string, sign: string): Promise<HoroscopeResult> {
   const client = createClient({
-    chain: testnetBradbury,
+    chain: studionet,
     account: address as `0x${string}`,
   });
 

@@ -30,7 +30,7 @@ export const Route = createRootRoute({
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "GenOracle — Onchain Horoscopes" },
-      { name: "description", content: "Premium onchain horoscope readings sealed by GenLayer's AI validator network on Bradbury Testnet." },
+      { name: "description", content: "Premium onchain horoscope readings sealed by GenLayer's AI validator network on GenLayer Studio." },
       { name: "author", content: "Zaksans" },
       { property: "og:title", content: "GenOracle — Onchain Horoscopes" },
       { property: "og:description", content: "Your destiny, validated by AI consensus on GenLayer." },
