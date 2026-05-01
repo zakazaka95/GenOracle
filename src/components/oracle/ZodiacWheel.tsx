@@ -31,27 +31,32 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
           x={center}
           y={center - 8}
           textAnchor="middle"
-          className="fill-[oklch(0.85_0.16_85)]"
-          style={{ fontFamily: "var(--font-display)", fontSize: 30, letterSpacing: "0.3em" }}
+          className="fill-[oklch(0.92_0.18_85)]"
+          style={{
+            fontFamily: "var(--font-display)",
+            fontSize: 36,
+            letterSpacing: "0.3em",
+            filter: "drop-shadow(0 0 18px oklch(0.85 0.18 85 / 0.7))",
+          }}
         >
           GEN
         </text>
         <text
           x={center}
-          y={center + 22}
+          y={center + 24}
           textAnchor="middle"
-          className="fill-white/60"
-          style={{ fontFamily: "var(--font-display)", fontSize: 14, letterSpacing: "0.5em" }}
+          className="fill-white/85"
+          style={{ fontFamily: "var(--font-display)", fontSize: 16, letterSpacing: "0.5em" }}
         >
           ORACLE
         </text>
-        <line x1={center - 60} y1={center + 36} x2={center + 60} y2={center + 36} stroke="oklch(0.85 0.16 85 / 0.5)" />
+        <line x1={center - 70} y1={center + 40} x2={center + 70} y2={center + 40} stroke="oklch(0.85 0.16 85 / 0.6)" />
         <text
           x={center}
-          y={center + 56}
+          y={center + 64}
           textAnchor="middle"
-          className="fill-white/40"
-          style={{ fontSize: 9, letterSpacing: "0.4em" }}
+          className="fill-white/80 shimmer-text"
+          style={{ fontSize: 12, letterSpacing: "0.45em", fontWeight: 500 }}
         >
           CHOOSE YOUR SIGN
         </text>
@@ -74,28 +79,51 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
               ["--sign" as any]: sign.color,
               ["--sign-glow" as any]: sign.glow,
               ["--sign-soft" as any]: sign.soft,
+              animationDelay: `${i * 0.15}s`,
             }}
             aria-label={sign.name}
           >
+            {/* pulsing aura */}
             <div
-              className={`relative flex h-14 w-14 items-center justify-center rounded-full border transition-all duration-500
+              aria-hidden
+              className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500
                 ${isSelected
-                  ? "scale-125 border-[var(--sign)] bg-[var(--sign-soft)]"
-                  : "border-white/15 bg-white/[0.04] hover:scale-110 hover:border-[var(--sign)] hover:bg-[var(--sign-soft)]"}`}
-              style={isSelected ? { boxShadow: `0 0 30px var(--sign-glow), 0 0 60px var(--sign-glow)` } : {}}
+                  ? "h-28 w-28 opacity-90"
+                  : "h-20 w-20 opacity-50 group-hover:h-32 group-hover:w-32 group-hover:opacity-100"}`}
+              style={{
+                background: `radial-gradient(circle, ${sign.glow} 0%, transparent 70%)`,
+                animation: `sign-pulse 3s ease-in-out ${i * 0.2}s infinite`,
+                filter: "blur(2px)",
+              }}
+            />
+            <div
+              className={`relative flex items-center justify-center rounded-full border transition-all duration-500
+                ${isSelected
+                  ? "h-16 w-16 scale-125 border-2 border-[var(--sign)] bg-[var(--sign-soft)]"
+                  : "h-14 w-14 border-white/20 bg-white/[0.04] group-hover:scale-[1.35] group-hover:border-[var(--sign)] group-hover:bg-[var(--sign-soft)]"}`}
+              style={
+                isSelected
+                  ? { boxShadow: `0 0 35px var(--sign-glow), 0 0 70px var(--sign-glow), inset 0 0 20px var(--sign-soft)` }
+                  : { boxShadow: `0 0 12px ${sign.glow}` }
+              }
             >
               <span
-                className="text-2xl transition-colors"
-                style={{ color: isSelected ? sign.color : "oklch(0.95 0.02 280)" }}
+                className="text-2xl transition-all duration-500 group-hover:text-3xl"
+                style={{
+                  color: isSelected ? sign.color : "oklch(0.95 0.02 280)",
+                  textShadow: isSelected
+                    ? `0 0 20px ${sign.glow}, 0 0 40px ${sign.glow}`
+                    : `0 0 10px ${sign.glow}`,
+                }}
               >
                 {sign.symbol}
               </span>
             </div>
             <div
-              className={`absolute left-1/2 top-full mt-2 -translate-x-1/2 whitespace-nowrap text-[10px] uppercase tracking-[0.25em] transition-opacity ${
-                isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-70"
+              className={`absolute left-1/2 top-full mt-3 -translate-x-1/2 whitespace-nowrap text-[10px] uppercase tracking-[0.25em] transition-opacity ${
+                isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-90"
               }`}
-              style={{ color: sign.color }}
+              style={{ color: sign.color, textShadow: `0 0 12px ${sign.glow}` }}
             >
               {sign.name}
             </div>
