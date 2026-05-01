@@ -100,8 +100,8 @@ export async function readHoroscope(address: string, sign: string): Promise<Horo
 
   const receipt: any = await client.waitForTransactionReceipt({
     hash: txHash,
-    status: TransactionStatus.FINALIZED,
-    retries: 120,
+    status: TransactionStatus.ACCEPTED,
+    retries: 200,
     interval: 5000,
   });
 
