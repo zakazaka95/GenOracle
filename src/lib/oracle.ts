@@ -37,7 +37,7 @@ export async function connectWallet(): Promise<string> {
   return accounts[0];
 }
 
-export async function ensureBradbury(): Promise<void> {
+export async function ensureStudio(): Promise<void> {
   try {
     await eth().request({
       method: "wallet_switchEthereumChain",
