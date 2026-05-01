@@ -88,17 +88,16 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
             }}
             aria-label={sign.name}
           >
-            {/* pulsing aura */}
+            {/* pulsing aura — tight, no bleed */}
             <div
               aria-hidden
               className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500
                 ${isSelected
-                  ? "h-28 w-28 opacity-90"
-                  : "h-20 w-20 opacity-50 group-hover:h-32 group-hover:w-32 group-hover:opacity-100"}`}
+                  ? "h-16 w-16 opacity-100"
+                  : "h-14 w-14 opacity-60 group-hover:h-20 group-hover:w-20 group-hover:opacity-100"}`}
               style={{
-                background: `radial-gradient(circle, ${sign.glow} 0%, transparent 70%)`,
+                background: `radial-gradient(circle, ${sign.color} 0%, ${sign.glow} 35%, transparent 75%)`,
                 animation: `sign-pulse 3s ease-in-out ${i * 0.2}s infinite`,
-                filter: "blur(2px)",
               }}
             />
             <div
