@@ -131,6 +131,14 @@
   0%, 100% { opacity: 0.45; transform: translate(-50%, -50%) scale(0.9); }
   50% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.1); }
 }
+@keyframes sign-pulse-ring {
+  0%, 100% {
+    box-shadow: 0 0 0 1px var(--ring-glow), 0 0 6px var(--ring-glow), inset 0 0 8px var(--sign-soft);
+  }
+  50% {
+    box-shadow: 0 0 0 1px var(--ring-color), 0 0 14px var(--ring-color), inset 0 0 14px var(--sign-soft);
+  }
+}
 @keyframes svg-shimmer {
   0%, 100% { opacity: 0.55; }
   50% { opacity: 1; }

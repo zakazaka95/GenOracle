@@ -88,18 +88,6 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
             }}
             aria-label={sign.name}
           >
-            {/* pulsing aura — tight, no bleed */}
-            <div
-              aria-hidden
-              className={`pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full transition-all duration-500
-                ${isSelected
-                  ? "h-16 w-16 opacity-100"
-                  : "h-14 w-14 opacity-60 group-hover:h-20 group-hover:w-20 group-hover:opacity-100"}`}
-              style={{
-                background: `radial-gradient(circle, ${sign.color} 0%, ${sign.glow} 35%, transparent 75%)`,
-                animation: `sign-pulse 3s ease-in-out ${i * 0.2}s infinite`,
-              }}
-            />
             <div
               className={`relative flex items-center justify-center rounded-full border transition-all duration-500
                 ${isSelected
@@ -107,8 +95,18 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
                   : "h-14 w-14 border-white/20 bg-white/[0.04] group-hover:scale-[1.35] group-hover:border-[var(--sign)] group-hover:bg-[var(--sign-soft)]"}`}
               style={
                 isSelected
-                  ? { boxShadow: `0 0 35px var(--sign-glow), 0 0 70px var(--sign-glow), inset 0 0 20px var(--sign-soft)` }
-                  : { boxShadow: `0 0 12px ${sign.glow}` }
+                  ? {
+                      boxShadow: `0 0 0 2px ${sign.glow}, 0 0 20px ${sign.color}, inset 0 0 18px var(--sign-soft)`,
+                      animation: `sign-pulse-ring 2.4s ease-in-out ${i * 0.15}s infinite`,
+                      ["--ring-color" as any]: sign.color,
+                      ["--ring-glow" as any]: sign.glow,
+                    }
+                  : {
+                      boxShadow: `0 0 0 1px ${sign.glow}, inset 0 0 10px var(--sign-soft)`,
+                      animation: `sign-pulse-ring 3s ease-in-out ${i * 0.2}s infinite`,
+                      ["--ring-color" as any]: sign.color,
+                      ["--ring-glow" as any]: sign.glow,
+                    }
               }
             >
               <span
