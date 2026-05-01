@@ -55,8 +55,13 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
           x={center}
           y={center + 64}
           textAnchor="middle"
-          className="fill-white/80 shimmer-text"
-          style={{ fontSize: 12, letterSpacing: "0.45em", fontWeight: 500 }}
+          className="fill-white"
+          style={{
+            fontSize: 12,
+            letterSpacing: "0.45em",
+            fontWeight: 500,
+            animation: "svg-shimmer 2.4s ease-in-out infinite",
+          }}
         >
           CHOOSE YOUR SIGN
         </text>
