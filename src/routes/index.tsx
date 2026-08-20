@@ -189,12 +189,12 @@ function GenOracle() {
           </div>
           <div>
             <div
-              className="text-lg leading-none"
+              className="select-none text-lg leading-none"
               style={{ fontFamily: "var(--font-display)", letterSpacing: "0.15em" }}
             >
               GENORACLE
             </div>
-            <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.3em] text-white/40">
+            <div className="select-none mt-0.5 font-mono text-[9px] uppercase tracking-[0.3em] text-white/40">
               onchain · bradbury
             </div>
           </div>
@@ -225,16 +225,16 @@ function GenOracle() {
       <main className="relative z-10 mx-auto max-w-6xl px-6 pb-24">
         {state !== "revealed" && state !== "loading" && (
           <section className="pt-8 pb-16 text-center">
-            <div className="font-mono text-[10px] uppercase tracking-[0.5em] text-white/40">
+            <div className="relative z-10 select-none font-mono text-[10px] uppercase tracking-[0.5em] text-white/40">
               ✦ daily reading · sealed by ai consensus ✦
             </div>
             <h1
-              className="mx-auto mt-6 max-w-3xl text-5xl sm:text-7xl font-light leading-[1.05]"
+              className="relative z-10 mx-auto mt-6 max-w-3xl select-none bg-transparent text-5xl sm:text-7xl font-light leading-[1.05]"
               style={{ fontFamily: "var(--font-display)" }}
             >
               The cosmos, <span className="shimmer-text italic">validated</span>.
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-base text-white/60 leading-relaxed">
+            <p className="relative z-10 mx-auto mt-6 max-w-xl select-none text-base text-white/60 leading-relaxed">
               A network of independent AI validators reads the stars and seals your daily horoscope on-chain.
               No oracles. No middlemen. Just consensus and constellations.
             </p>
@@ -249,16 +249,16 @@ function GenOracle() {
               <div
                 className="mx-auto max-w-2xl rounded-2xl glass-sign p-6 text-center animate-[fade-up_0.5s_ease-out]"
               >
-                <div className="text-[10px] uppercase tracking-[0.4em] text-white/40">
+                <div className="select-none text-[10px] uppercase tracking-[0.4em] text-white/40">
                   {sign.element} · {sign.dates}
                 </div>
                 <h3
-                  className="mt-2 text-4xl text-gradient-sign"
+                  className="mt-2 inline-block select-none text-4xl text-gradient-sign"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
                   {sign.name}
                 </h3>
-                <p className="mt-1 text-sm text-white/60 italic">{sign.personality}</p>
+                <p className="mt-1 select-none text-sm text-white/60 italic">{sign.personality}</p>
               </div>
             )}
 

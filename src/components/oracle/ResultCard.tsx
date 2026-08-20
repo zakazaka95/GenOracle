@@ -34,16 +34,16 @@ export function ResultCard({
           {/* Header */}
           <div className="flex items-start justify-between gap-4">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40">
+              <div className="select-none font-mono text-[10px] uppercase tracking-[0.4em] text-white/40">
                 {result.date} · validated on-chain
               </div>
               <h2
-                className="mt-1 text-3xl sm:text-4xl text-gradient-sign"
+                className="mt-1 inline-block select-none text-3xl sm:text-4xl text-gradient-sign"
                 style={{ fontFamily: "var(--font-display)" }}
               >
                 {sign.name}
               </h2>
-              <div className="mt-0.5 text-[11px] uppercase tracking-[0.3em] text-white/40">
+              <div className="mt-0.5 select-none text-[11px] uppercase tracking-[0.3em] text-white/40">
                 {sign.element} · {sign.personality}
               </div>
             </div>
@@ -129,9 +129,9 @@ export function ResultCard({
               <div className="text-xl">🔥</div>
               <div>
                 <div className="text-base font-semibold" style={{ color: sign.color }}>
-                  {result.streak} day{result.streak === 1 ? "" : "s"}
+                  {Number(result.streak ?? 0)} day{Number(result.streak ?? 0) === 1 ? "" : "s"}
                 </div>
-                <div className="text-[9px] uppercase tracking-[0.3em] text-white/40">
+                <div className="select-none text-[9px] uppercase tracking-[0.3em] text-white/40">
                   sacred streak
                 </div>
               </div>
@@ -140,9 +140,9 @@ export function ResultCard({
               <div className="text-xl">✦</div>
               <div>
                 <div className="text-base font-semibold text-gradient-gold">
-                  {result.free_reads}
+                  {Number(result.free_reads ?? 0)}
                 </div>
-                <div className="text-[9px] uppercase tracking-[0.3em] text-white/40">
+                <div className="select-none text-[9px] uppercase tracking-[0.3em] text-white/40">
                   free reads remaining
                 </div>
               </div>

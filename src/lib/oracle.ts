@@ -100,7 +100,11 @@ export async function getCurrentChainId(): Promise<string> {
   return await eth().request({ method: "eth_chainId" });
 }
 
-const num = (v: any): number => (typeof v === "bigint" ? Number(v) : Number(v ?? 0));
+const num = (v: any): number => {
+  if (typeof v === "bigint") return Number(v);
+  const n = Number(v ?? 0);
+  return Number.isFinite(n) ? n : 0;
+};
 const str = (v: any): string => (v === undefined || v === null ? "" : String(v));
 
 export function cacheKey(address: string, sign: string, date: string) {
@@ -216,8 +220,8 @@ export async function readHoroscope(address: string, signName: string): Promise<
     lucky_token_name: str(reading.lucky_token_name),
     lucky_token_reason: str(reading.lucky_token_reason),
     cached: Boolean(reading.cached),
-    streak: num(reading.streak),
-    free_reads: num(reading.free_reads),
+    streak: num(reading.streak ?? reading.current_streak ?? reading.profile?.streak ?? 0),
+    free_reads: num(reading.free_reads ?? reading.profile?.free_reads ?? 0),
     total_readings: num(reading.total_readings),
     tx_hash: String(txHash),
   };
