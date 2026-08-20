@@ -91,6 +91,16 @@ function GenOracle() {
     };
   }, []);
 
+  // Restore a previously purchased reading for this sign/day/wallet
+  useEffect(() => {
+    if (!address || !sign) return;
+    const stored = loadStoredReading(address, sign.name);
+    if (stored) {
+      setResult(stored);
+      setState("revealed");
+    }
+  }, [address, sign]);
+
   // Refresh balance when address or chain changes
   useEffect(() => {
     if (!address) return;
@@ -104,6 +114,7 @@ function GenOracle() {
       }
     })();
   }, [address, chainId]);
+
 
   async function handleConnect() {
     setError(null);
