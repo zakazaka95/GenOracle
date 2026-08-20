@@ -5,7 +5,7 @@ import {
   CHAIN_ID_HEX,
   READ_PRICE_WEI,
   connectWallet,
-  ensureStudio,
+  ensureBradbury,
   getBalance,
   getCurrentChainId,
   readHoroscope,
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Premium onchain horoscope readings sealed by GenLayer's AI validator network on GenLayer Studio. Your destiny, validated by consensus.",
+          "Premium onchain horoscope readings sealed by GenLayer's AI validator network on GenLayer Testnet Bradbury. Your destiny, validated by consensus.",
       },
       { property: "og:title", content: "GenOracle — Onchain Horoscopes" },
       {
@@ -110,7 +110,7 @@ function GenOracle() {
     try {
       const addr = await connectWallet();
       setAddress(addr);
-      await ensureStudio();
+      await ensureBradbury();
       const cid = await getCurrentChainId();
       setChainId(cid);
       const b = await getBalance(addr);
@@ -190,7 +190,7 @@ function GenOracle() {
         <div className="flex items-center gap-3">
           {onWrongChain && (
             <button
-              onClick={ensureStudio}
+              onClick={ensureBradbury}
               className="rounded-full border border-destructive/50 bg-destructive/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.25em] text-destructive hover:bg-destructive/20"
             >
               ⚠ Wrong Network · Switch
@@ -284,9 +284,9 @@ function GenOracle() {
                   }}
                 >
                   {onWrongChain
-                    ? "Switch to GenLayer Studio to read"
+                    ? "Switch to GenLayer Bradbury to read"
                     : sign
-                    ? "Read My Stars · 0.05 GEN"
+                    ? "Read My Stars · 1 GEN"
                     : "Choose a sign"}
                 </button>
               )}
@@ -310,7 +310,7 @@ function GenOracle() {
         {state !== "revealed" && (
           <footer className="mt-24 border-t border-white/5 pt-8 text-center">
             <div className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/30">
-              contract 0xC0B4…9306 · chain 61999 · genlayer studio
+              contract 0x7985…6cca · chain 4221 · genlayer testnet bradbury
             </div>
             <div className="mt-3">
               <a
@@ -345,17 +345,17 @@ function FaucetPrompt({
         Fuel your reading
       </h3>
       <p className="mt-2 text-sm text-white/60">
-        You need at least <span className="text-white">0.05 GEN</span> to call the oracle.
+        You need at least <span className="text-white">1 GEN</span> to call the oracle.
         {balance !== null && (
           <> Current balance: <span className="font-mono">{(Number(balance) / 1e18).toFixed(4)} GEN</span></>
         )}
       </p>
       <p className="mt-3 text-xs text-white/50">
-        Open GenLayer Studio, connect your wallet, then use the faucet in the top right corner.
+        Get testnet GEN from the GenLayer Bradbury faucet, then return here.
       </p>
       <div className="mt-5 flex flex-col gap-2">
         <a
-          href="https://studio.genlayer.com"
+          href="https://genlayer.com/faucet"
           target="_blank"
           rel="noreferrer"
           className="rounded-full px-6 py-3 text-sm uppercase tracking-[0.3em] font-medium"
@@ -365,7 +365,7 @@ function FaucetPrompt({
             boxShadow: "0 10px 40px var(--sign-glow)",
           }}
         >
-          Open GenLayer Studio →
+          Open GEN Faucet →
         </a>
         <button
           onClick={onRecheck}
