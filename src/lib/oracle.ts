@@ -5,7 +5,7 @@ import { ExecutionResult, TransactionStatus } from "genlayer-js/types";
 // @ts-ignore
 BigInt.prototype.toJSON = function () { return this.toString(); };
 
-export const CONTRACT_ADDRESS = "0x798571b9E5E8c1388da823cb9e8d3Ce54Ea76cca" as const;
+export const CONTRACT_ADDRESS = "0x790bdED92Aef00B83369561D5aCfd3557F6D946d" as const;
 export const CHAIN_ID_HEX = "0x107D";
 export const CHAIN_ID_DEC = 4221;
 export const CHAIN_NAME = "GenLayer Testnet Bradbury";
