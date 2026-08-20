@@ -171,7 +171,17 @@ export function ResultCard({
           </div>
 
           {/* Made by */}
-          <div className="mt-3 text-center">
+          <div className="mt-3 flex flex-col items-center gap-1 text-center">
+            {result.tx_hash && (
+              <a
+                href={`https://explorer-bradbury.genlayer.com/tx/${result.tx_hash}`}
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-[9px] uppercase tracking-[0.3em] text-white/30 hover:text-white/60 transition-colors"
+              >
+                View on Bradbury Explorer ↗
+              </a>
+            )}
             <a
               href="https://x.com/ZaksansPG"
               target="_blank"
@@ -181,6 +191,7 @@ export function ResultCard({
               Made by Zaksans
             </a>
           </div>
+
         </div>
       </div>
     </div>
