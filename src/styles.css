@@ -165,24 +165,27 @@
 }
 
 .text-gradient-sign {
-  background: linear-gradient(135deg, var(--sign), oklch(0.95 0.05 85));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  color: oklch(0.97 0.02 85);
+  text-shadow: 0 0 30px var(--sign-glow);
 }
 
 .text-gradient-gold {
-  background: linear-gradient(135deg, oklch(0.95 0.12 85), oklch(0.75 0.18 60));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  color: oklch(0.88 0.15 80);
 }
 
 .shimmer-text {
-  background: linear-gradient(90deg, var(--sign) 0%, oklch(1 0 0) 50%, var(--sign) 100%);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: shimmer 3s linear infinite;
+  display: inline;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  color: oklch(0.88 0.15 80);
+  text-shadow: 0 0 28px oklch(0.85 0.16 85 / 0.45);
 }
