@@ -9,7 +9,9 @@ import {
   getBalance,
   getCurrentChainId,
   readHoroscope,
+  loadStoredReading,
   type HoroscopeResult,
+
 } from "@/lib/oracle";
 import { Starfield } from "@/components/oracle/Starfield";
 import { ZodiacWheel } from "@/components/oracle/ZodiacWheel";
