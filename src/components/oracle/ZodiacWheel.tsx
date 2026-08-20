@@ -122,7 +122,7 @@ export function ZodiacWheel({ selected, onSelect }: Props) {
               </span>
             </div>
             <div
-              className={`absolute left-1/2 top-full mt-3 -translate-x-1/2 whitespace-nowrap text-[10px] uppercase tracking-[0.25em] transition-opacity ${
+              className={`absolute left-1/2 top-full mt-3 -translate-x-1/2 select-none whitespace-nowrap text-[10px] uppercase tracking-[0.25em] transition-opacity ${
                 isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-90"
               }`}
               style={{ color: sign.color, textShadow: `0 0 12px ${sign.glow}` }}
