@@ -37,32 +37,53 @@ const eth = () => {
 };
 
 export async function connectWallet(): Promise<string> {
-  const accounts: string[] = await eth().request({ method: "eth_requestAccounts" });
-  if (!accounts?.[0]) throw new Error("No account returned by wallet");
+  if (!window.ethereum) {
+    throw new Error("Please install MetaMask or another compatible wallet.");
+  }
+
+  const accounts = (await window.ethereum.request({
+    method: "eth_requestAccounts",
+  })) as string[];
+
+  if (!accounts?.[0]) {
+    throw new Error("No wallet account was returned.");
+  }
+
+  await ensureBradbury();
+
   return accounts[0];
 }
 
 export async function ensureBradbury(): Promise<void> {
+  if (!window.ethereum) {
+    throw new Error("Please install MetaMask or another compatible wallet.");
+  }
+
   try {
-    await eth().request({
+    await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: CHAIN_ID_HEX }],
     });
-  } catch (err: any) {
-    if (err?.code === 4902 || err?.code === -32603) {
-      await eth().request({
-        method: "wallet_addEthereumChain",
-        params: [{
+  } catch (error: any) {
+    const errorCode =
+      error?.code ?? error?.data?.originalError?.code;
+
+    if (errorCode !== 4902) {
+      throw error;
+    }
+
+    await window.ethereum.request({
+      method: "wallet_addEthereumChain",
+      params: [
+        {
           chainId: CHAIN_ID_HEX,
           chainName: CHAIN_NAME,
           nativeCurrency: { name: "GEN", symbol: "GEN", decimals: 18 },
           rpcUrls: [RPC_URL],
           blockExplorerUrls: [EXPLORER_URL],
-        }],
-      });
-    } else {
-      throw err;
-    }
+        },
+      ],
+    });
   }
 }
 
