@@ -323,7 +323,7 @@ function GenOracle() {
         {state !== "revealed" && (
           <footer className="mt-24 border-t border-white/5 pt-8 text-center">
             <div className="font-mono text-[9px] uppercase tracking-[0.4em] text-white/30">
-              contract 0x7985…6cca · chain 4221 · genlayer testnet bradbury
+              contract 0x790b…946d · chain 4221 · genlayer testnet bradbury
             </div>
             <div className="mt-3">
               <a
