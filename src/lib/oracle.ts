@@ -164,10 +164,8 @@ export async function readHoroscope(address: string, sign: string): Promise<Horo
   const writeClient = createClient({
     chain: testnetBradbury,
     account: address as `0x${string}`,
-    provider: eth(),
+    provider: (typeof window !== "undefined" ? (window as any).ethereum : undefined),
   } as any);
-
-  await (writeClient as any).connect("testnetBradbury");
 
   let wasCachedBeforeTransaction = false;
   try {
