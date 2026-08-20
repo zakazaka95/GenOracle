@@ -83,7 +83,7 @@ export function LoadingRitual({ sign }: { sign: ZodiacSign }) {
           {STAGES[stage]}
         </div>
         <p className="mt-3 max-w-md text-sm text-white/50">
-          A network of independent AI validators is reading the stars for you. This may take 5-10 minutes — destiny is not rushed.
+          Your reading is reaching consensus. This can take 5–10 minutes — destiny is not rushed.
         </p>
       </div>
 
