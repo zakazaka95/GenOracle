@@ -37,11 +37,12 @@ const eth = () => {
 };
 
 export async function connectWallet(): Promise<string> {
-  if (!window.ethereum) {
+  const ethereum = (typeof window !== "undefined" ? (window as any).ethereum : null);
+  if (!ethereum) {
     throw new Error("Please install MetaMask or another compatible wallet.");
   }
 
-  const accounts = (await window.ethereum.request({
+  const accounts = (await ethereum.request({
     method: "eth_requestAccounts",
   })) as string[];
 
@@ -55,24 +56,24 @@ export async function connectWallet(): Promise<string> {
 }
 
 export async function ensureBradbury(): Promise<void> {
-  if (!window.ethereum) {
+  const ethereum = (typeof window !== "undefined" ? (window as any).ethereum : null);
+  if (!ethereum) {
     throw new Error("Please install MetaMask or another compatible wallet.");
   }
 
   try {
-    await window.ethereum.request({
+    await ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: CHAIN_ID_HEX }],
     });
   } catch (error: any) {
-    const errorCode =
-      error?.code ?? error?.data?.originalError?.code;
+    const errorCode = error?.code ?? error?.data?.originalError?.code;
 
     if (errorCode !== 4902) {
       throw error;
     }
 
-    await window.ethereum.request({
+    await ethereum.request({
       method: "wallet_addEthereumChain",
       params: [
         {
