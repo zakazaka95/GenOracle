@@ -7,9 +7,12 @@ import {
   connectWallet,
   ensureBradbury,
   getBalance,
+  getFreeReads,
   getCurrentChainId,
+  getAcceptedCachedReading,
   readHoroscope,
   loadStoredReading,
+  clearStoredReading,
   type HoroscopeResult,
 
 } from "@/lib/oracle";
@@ -49,14 +52,13 @@ function GenOracle() {
   const [state, setState] = useState<AppState>("idle");
   const [address, setAddress] = useState<string | null>(null);
   const [balance, setBalance] = useState<bigint | null>(null);
+  const [freeReads, setFreeReads] = useState<number | null>(null);
   const [chainId, setChainId] = useState<string | null>(null);
   const [needsFaucet, setNeedsFaucet] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<HoroscopeResult | null>(null);
 
   const onWrongChain = chainId !== null && chainId.toLowerCase() !== CHAIN_ID_HEX.toLowerCase();
-  const hasEnough = balance !== null && balance >= READ_PRICE_WEI;
-
   // Apply sign palette globally
   useEffect(() => {
     const root = document.documentElement;
@@ -80,6 +82,7 @@ function GenOracle() {
       if (!accs?.length) {
         setAddress(null);
         setBalance(null);
+        setFreeReads(null);
         setState("idle");
       } else {
         setAddress(accs[0]);
@@ -93,14 +96,28 @@ function GenOracle() {
     };
   }, []);
 
-  // Restore a previously purchased reading for this sign/day/wallet
+  // A local entry is only a restoration hint. Display data must come from
+  // accepted contract state so altered localStorage can never change a reading.
   useEffect(() => {
     if (!address || !sign) return;
     const stored = loadStoredReading(address, sign.name);
-    if (stored) {
-      setResult(stored);
+    if (!stored) return;
+
+    let cancelled = false;
+    void getAcceptedCachedReading(address, sign.name).then((accepted) => {
+      if (cancelled) return;
+      if (!accepted) {
+        clearStoredReading(address, sign.name);
+        return;
+      }
+      setResult(accepted);
+      setFreeReads(accepted.free_reads);
       setState("revealed");
-    }
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [address, sign]);
 
   // Refresh balance when address or chain changes
@@ -108,9 +125,13 @@ function GenOracle() {
     if (!address) return;
     (async () => {
       try {
-        const b = await getBalance(address);
+        const [b, availableFreeReads] = await Promise.all([
+          getBalance(address),
+          getFreeReads(address),
+        ]);
         setBalance(b);
-        setNeedsFaucet(b < READ_PRICE_WEI);
+        setFreeReads(availableFreeReads);
+        setNeedsFaucet(b < READ_PRICE_WEI && availableFreeReads === 0);
       } catch (e) {
         // ignore
       }
@@ -126,9 +147,13 @@ function GenOracle() {
       await ensureBradbury();
       const cid = await getCurrentChainId();
       setChainId(cid);
-      const b = await getBalance(addr);
+      const [b, availableFreeReads] = await Promise.all([
+        getBalance(addr),
+        getFreeReads(addr),
+      ]);
       setBalance(b);
-      if (b < READ_PRICE_WEI) {
+      setFreeReads(availableFreeReads);
+      if (b < READ_PRICE_WEI && availableFreeReads === 0) {
         setNeedsFaucet(true);
       } else {
         setNeedsFaucet(false);
@@ -143,9 +168,13 @@ function GenOracle() {
     if (!address) return;
     setError(null);
     try {
-      const b = await getBalance(address);
+      const [b, availableFreeReads] = await Promise.all([
+        getBalance(address),
+        getFreeReads(address),
+      ]);
       setBalance(b);
-      if (b >= READ_PRICE_WEI) {
+      setFreeReads(availableFreeReads);
+      if (b >= READ_PRICE_WEI || availableFreeReads > 0) {
         setNeedsFaucet(false);
         setState("connected");
       }
@@ -161,6 +190,10 @@ function GenOracle() {
     try {
       const r = await readHoroscope(address, sign.name);
       setResult(r);
+      setFreeReads(r.free_reads);
+      const updatedBalance = await getBalance(address);
+      setBalance(updatedBalance);
+      setNeedsFaucet(updatedBalance < READ_PRICE_WEI && r.free_reads === 0);
       setState("revealed");
     } catch (e: any) {
       setError(e?.message || "The cosmos was unreachable. Try again.");
@@ -299,7 +332,9 @@ function GenOracle() {
                   {onWrongChain
                     ? "Switch to GenLayer Bradbury to read"
                     : sign
-                    ? "Read My Stars · 1 GEN"
+                    ? freeReads !== null && freeReads > 0
+                      ? "Read My Stars · Free"
+                      : "Read My Stars · 1 GEN"
                     : "Choose a sign"}
                 </button>
               )}
