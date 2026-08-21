@@ -122,6 +122,16 @@ export function loadStoredReading(address: string, sign: string): HoroscopeResul
   }
 }
 
+export function clearStoredReading(address: string, sign: string) {
+  if (typeof window === "undefined") return;
+  const date = new Date().toISOString().slice(0, 10);
+  try {
+    window.localStorage.removeItem(cacheKey(address, sign, date));
+  } catch {
+    // ignore
+  }
+}
+
 function storeReading(address: string, result: HoroscopeResult) {
   try {
     window.localStorage.setItem(
@@ -151,6 +161,67 @@ function normalizeReading(raw: unknown): any | null {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+function toHoroscopeResult(
+  reading: any,
+  sign: string,
+  date: string,
+  txHash?: string,
+): HoroscopeResult {
+  return {
+    sign: str(reading.sign) || sign,
+    date: str(reading.date) || date,
+    horoscope: str(reading.horoscope),
+    lucky_number: num(reading.lucky_number),
+    lucky_color: str(reading.lucky_color),
+    energy: str(reading.energy),
+    lucky_token: str(reading.lucky_token),
+    lucky_token_name: str(reading.lucky_token_name),
+    lucky_token_reason: str(reading.lucky_token_reason),
+    cached: Boolean(reading.cached),
+    streak: num(reading.streak ?? reading.current_streak ?? reading.profile?.streak ?? 0),
+    free_reads: num(reading.free_reads ?? reading.profile?.free_reads ?? 0),
+    total_readings: num(reading.total_readings),
+    ...(txHash ? { tx_hash: txHash } : {}),
+  };
+}
+
+export async function getFreeReads(address: string): Promise<number> {
+  const readClient = createClient({ chain: testnetBradbury });
+  const raw = await readClient.readContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    functionName: "get_free_reads",
+    args: [address],
+    stateStatus: "accepted",
+  } as any);
+  return num(raw);
+}
+
+export async function getAcceptedCachedReading(
+  address: string,
+  signName: string,
+): Promise<HoroscopeResult | null> {
+  const date = new Date().toISOString().slice(0, 10);
+  const sign = signName.toLowerCase();
+  const readClient = createClient({ chain: testnetBradbury });
+
+  try {
+    const raw = await readClient.readContract({
+      address: CONTRACT_ADDRESS as `0x${string}`,
+      functionName: "get_cached_reading",
+      args: [sign, date, address],
+      stateStatus: "accepted",
+    } as any);
+    const reading = normalizeReading(raw);
+    if (!reading) return null;
+
+    const result = toHoroscopeResult(reading, sign, date);
+    storeReading(address, result);
+    return result;
+  } catch {
+    return null;
+  }
+}
+
 export async function readHoroscope(address: string, signName: string): Promise<HoroscopeResult> {
   const date = new Date().toISOString().slice(0, 10);
   const sign = signName.toLowerCase();
@@ -165,11 +236,21 @@ export async function readHoroscope(address: string, signName: string): Promise<
     provider: (typeof window !== "undefined" ? (window as any).ethereum : undefined),
   } as any);
 
+  // Accepted contract state decides whether this call redeems a free read.
+  // Never infer payment value from local storage or stale UI state.
+  const availableFreeReadsRaw = await readClient.readContract({
+    address: CONTRACT_ADDRESS as `0x${string}`,
+    functionName: "get_free_reads",
+    args: [address],
+    stateStatus: "accepted",
+  } as any);
+  const transactionValue = num(availableFreeReadsRaw) > 0 ? 0n : READ_PRICE_WEI;
+
   const txHash = await writeClient.writeContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     functionName: "read_horoscope",
     args: [sign, date],
-    value: READ_PRICE_WEI,
+    value: transactionValue,
   });
 
   const receipt: any = await readClient.waitForTransactionReceipt({
@@ -209,22 +290,7 @@ export async function readHoroscope(address: string, signName: string): Promise<
     throw new Error("Your reading is still reaching consensus. Please try again in a few minutes.");
   }
 
-  const result: HoroscopeResult = {
-    sign: str(reading.sign) || sign,
-    date: str(reading.date) || date,
-    horoscope: str(reading.horoscope),
-    lucky_number: num(reading.lucky_number),
-    lucky_color: str(reading.lucky_color),
-    energy: str(reading.energy),
-    lucky_token: str(reading.lucky_token),
-    lucky_token_name: str(reading.lucky_token_name),
-    lucky_token_reason: str(reading.lucky_token_reason),
-    cached: Boolean(reading.cached),
-    streak: num(reading.streak ?? reading.current_streak ?? reading.profile?.streak ?? 0),
-    free_reads: num(reading.free_reads ?? reading.profile?.free_reads ?? 0),
-    total_readings: num(reading.total_readings),
-    tx_hash: String(txHash),
-  };
+  const result = toHoroscopeResult(reading, sign, date, String(txHash));
 
   storeReading(address, result);
   return result;
